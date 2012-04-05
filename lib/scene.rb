@@ -10,6 +10,7 @@ class Scene < GameState
 		super
 		self.input = { :escape => :exit, :e => :edit, :r => :restart, :space => Pause }
 		@player = Player.create(:x => 64, :y => 240)
+		@hud = HUD.create(:player => @player)
 	end
 	
 	def setup
@@ -20,7 +21,7 @@ class Scene < GameState
 	
 	def draw
 		#~ @backdrop.draw
-		#~ @hud.draw if @hud != nil
+		@hud.draw
 		super
 	end
 	
@@ -45,10 +46,7 @@ class Scene < GameState
 			end
 		}
 		self.viewport.center_around(@player)
-		#~ @backdrop.camera_x, @backdrop.camera_y = self.viewport.x.to_i, self.viewport.y.to_i
-		#~ @backdrop.camera_x, @backdrop.camera_y = self.viewport.x, self.viewport.y
-		#~ @backdrop.update
-		#~ @hud.update if @hud != nil
+		@hud.update
 		$window.caption = "Le Trial, FPS: #{$window.fps}, #{@player.action}, #{@player.status}"
 	end
 end
