@@ -19,15 +19,21 @@ class Block < GameObject
     # @image = Image["block-block.png"]
     # @image = Image["block-#{self.filename}.png"].dup
     @image = Image["tiles/block-#{self.filename}.png"]
-		$game_terrains << self
+	$game_terrains << self
 		
     # @color = Color.new(0xff808080)
     cache_bounding_box
   end
 end
 
-class Brick < Block; end
-class Gravel < Block; end
+class Ground < Block; end
+class GroundLower < Block; end
+class GroundLoop < Block; end
+class BridgeGray < Block; end
+class BridgeGrayLeft < Block; end
+class BridgeGrayRight < Block; end
+class BridgeGrayMid < Block; end
+class BridgeGrayPole < Block; end
 
 # class Brick < Block
 	# def setup

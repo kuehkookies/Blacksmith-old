@@ -3,7 +3,7 @@
 # When you need self-defense
 # ------------------------------------------------------
 class Sword < GameObject
-	trait :bounding_box, :scale => [1, 0.25], :debug => true
+	trait :bounding_box, :scale => [1, 0.25], :debug => false
 	traits :collision_detection, :timer, :velocity
 	attr_reader :damage
 	attr_accessor :zorder

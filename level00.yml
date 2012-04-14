@@ -1,321 +1,817 @@
 --- 
-- Gravel: 
+- Ground: 
     :x: 0.0
-    :y: 264.0
+    :y: 256.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Gravel: 
-    :x: 24.0
-    :y: 264.0
+- Ground: 
+    :x: 16.0
+    :y: 256.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Gravel: 
-    :x: 72.0
-    :y: 264.0
+- Ground: 
+    :x: 32.0
+    :y: 256.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Gravel: 
+- Ground: 
     :x: 48.0
-    :y: 264.0
+    :y: 256.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Gravel: 
+- Ground: 
+    :x: 64.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- Ground: 
+    :x: 80.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayLeft: 
     :x: 96.0
-    :y: 264.0
+    :y: 256.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Gravel: 
-    :x: 120.0
-    :y: 264.0
+- BridgeGrayRight: 
+    :x: 224.0
+    :y: 256.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Gravel: 
-    :x: 144.0
-    :y: 264.0
+- BridgeGray: 
+    :x: 112.0
+    :y: 256.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Gravel: 
-    :x: 168.0
-    :y: 264.0
+- BridgeGray: 
+    :x: 128.0
+    :y: 256.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Gravel: 
-    :x: 192.0
-    :y: 264.0
+- BridgeGray: 
+    :x: 208.0
+    :y: 256.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Gravel: 
-    :x: 408.0
-    :y: 264.0
+- Ground: 
+    :x: 256.0
+    :y: 256.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Gravel: 
-    :x: 456.0
-    :y: 264.0
+- Ground: 
+    :x: 304.0
+    :y: 224.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Gravel: 
-    :x: 432.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 480.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 504.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 528.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 552.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 600.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 576.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 384.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 360.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 216.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 240.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 264.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 288.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 336.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Gravel: 
-    :x: 312.0
-    :y: 264.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Ball: 
-    :x: 96.0
-    :y: 192.0
-    :angle: 0
-    :zorder: 200
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Ball: 
-    :x: 192.0
-    :y: 192.0
-    :angle: 0
-    :zorder: 200
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Brick: 
-    :x: 144.0
+- Ground: 
+    :x: 272.0
     :y: 240.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Brick: 
-    :x: 168.0
-    :y: 216.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Brick: 
-    :x: 96.0
-    :y: 168.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Brick: 
-    :x: 240.0
-    :y: 168.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Brick: 
-    :x: 264.0
-    :y: 168.0
-    :angle: 0
-    :zorder: 100
-    :factor_x: 1.0
-    :factor_y: 1.0
-    :alpha: 255
-- Brick: 
+- Ground: 
     :x: 288.0
-    :y: 168.0
+    :y: 240.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Brick: 
-    :x: 312.0
-    :y: 168.0
+- BridgeGrayLeft: 
+    :x: 320.0
+    :y: 224.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Brick: 
-    :x: 336.0
-    :y: 168.0
+- BridgeGrayRight: 
+    :x: 448.0
+    :y: 224.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Brick: 
-    :x: 360.0
-    :y: 168.0
+- Ground: 
+    :x: 480.0
+    :y: 224.0
     :angle: 0
     :zorder: 100
     :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Raven: 
-    :x: 168.0
-    :y: 198.0
+- Ground: 
+    :x: 512.0
+    :y: 240.0
     :angle: 0
-    :zorder: 200
-    :factor_x: -1.0
+    :zorder: 100
+    :factor_x: 1.0
     :factor_y: 1.0
     :alpha: 255
-- Ghoul: 
-    :x: 312.0
-    :y: 156.0
+- Ground: 
+    :x: 544.0
+    :y: 272.0
     :angle: 0
-    :zorder: 200
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- Ground: 
+    :x: 496.0
+    :y: 240.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- Ground: 
+    :x: 528.0
+    :y: 240.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 0.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 16.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 32.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 48.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 64.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 80.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 256.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 272.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 288.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 304.0
+    :y: 240.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 480.0
+    :y: 240.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 496.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 512.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 528.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 544.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- Ground: 
+    :x: 576.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- Ground: 
+    :x: 592.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- Ground: 
+    :x: 560.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 592.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 576.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 560.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 0.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 16.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 32.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 48.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 64.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 80.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 272.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 288.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 304.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 304.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 304.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 288.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 272.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 256.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 480.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 480.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 480.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 496.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 528.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 512.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 528.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 512.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 496.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGray: 
+    :x: 384.0
+    :y: 224.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayMid: 
+    :x: 384.0
+    :y: 224.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGray: 
+    :x: 400.0
+    :y: 224.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGray: 
+    :x: 192.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGray: 
+    :x: 176.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGray: 
+    :x: 144.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGray: 
+    :x: 160.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- Ground: 
+    :x: 240.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 240.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 240.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayMid: 
+    :x: 160.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- Ground: 
+    :x: 464.0
+    :y: 224.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLower: 
+    :x: 464.0
+    :y: 240.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 464.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 464.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- GroundLoop: 
+    :x: 464.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 160.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 160.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 92.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 92.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 228.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 228.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 384.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 384.0
+    :y: 240.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 384.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 384.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 316.0
+    :y: 240.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 316.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 316.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 316.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 452.0
+    :y: 240.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 452.0
+    :y: 256.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 452.0
+    :y: 272.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- BridgeGrayPole: 
+    :x: 452.0
+    :y: 288.0
+    :angle: 0
+    :zorder: 100
+    :factor_x: 1.0
+    :factor_y: 1.0
+    :alpha: 255
+- Ground: 
+    :x: 144.0
+    :y: 192.0
+    :angle: 0
+    :zorder: 100
     :factor_x: 1
     :factor_y: 1
     :alpha: 255
-- Ghoul: 
-    :x: 96.0
-    :y: 156.0
+- Ground: 
+    :x: 128.0
+    :y: 192.0
     :angle: 0
-    :zorder: 200
+    :zorder: 100
     :factor_x: 1
     :factor_y: 1
     :alpha: 255

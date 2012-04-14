@@ -44,6 +44,7 @@ class Player < Chingu::GameObject
 		@status = :stand
 		@action = :stand
 		@invincible = false
+		@jumping = false
 		@running = false
 		@subattack = false
 		@subweapon = :none
@@ -65,6 +66,7 @@ class Player < Chingu::GameObject
 			@image = @animations[:stand].first
 			@status = :stand
 			@running = false
+			@jumping = false
 		end
 	end
 	
@@ -82,9 +84,17 @@ class Player < Chingu::GameObject
 		return if self.velocity_y > Environment::GRAV_WHEN_LAND # 1
 		return if @status == :crouch or @status == :jump or @status == :hurt or die? or @action != :stand 
 		@status = :jump
+		@jumping = true
 		# @velocity_x = -@speed if holding?(:left)
 		# @velocity_x = @speed if holding?(:right)
-		@velocity_y = -6
+		@velocity_y = -4
+		during(250){
+			if holding?(:z) && @jumping
+				@velocity_y = -4 unless @velocity_y <=  -Environment::GRAV_CAP
+			else
+				@jumping = false
+			end
+		}
 	end
 	
 	def crouch
@@ -105,6 +115,7 @@ class Player < Chingu::GameObject
 	end
 	
 	def land
+		@jumping = false
 		if (@y - @y_flag > 40 or (@y - @y_flag > 20 && @status == :jump) ) && @status != :die
 			Sound["sfx/step.wav"].play
 			between(1,300) { 
@@ -168,7 +179,7 @@ class Player < Chingu::GameObject
 					land
 				end
 				me.velocity_y = Environment::GRAV_WHEN_LAND # 1
-				me.y = stone_wall.bb.top - 1 unless me.y > stone_wall.y
+				me.y = stone_wall.bb.top - 1 # unless me.y > stone_wall.y
 			end
 		end
 	end
@@ -258,7 +269,17 @@ class Player < Chingu::GameObject
 							Sound["sfx/swing.wav"].play
 							}
 					after(250) { @image = @animations[:shoot].last}
-					after(400) { @image = @animations[:stand].first; @image = @animations[:jump].last if @status == :jump; @action = :stand}
+					after(400) { 
+						@action = :stand
+						@status = :stand if @status == :stead
+						unless disabled
+							@image = @animations[:stand].first if @status == :stand or @status == :stead
+							@image = @animations[:crouch].first if @status == :crouch
+							@image = @animations[:jump].last if @status == :jump
+						end
+						@animations[:shoot].reset
+						@animations[:crouch_shoot].reset
+					}
 				end
 			else
 				unless Sword.size >= 1
@@ -330,8 +351,9 @@ class Player < Chingu::GameObject
 						unless @action == :raise
 							@sword.die
 							@action = :stand
+							@status = :stand if @status == :stead
 							unless disabled
-								@image = @animations[:stand].first if @status == :stand
+								@image = @animations[:stand].first if @status == :stand or @status == :stead
 								@image = @animations[:crouch].first if @status == :crouch
 								@image = @animations[:jump].last if @status == :jump
 							end
