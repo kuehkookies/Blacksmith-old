@@ -2,14 +2,17 @@ require 'rubygems' rescue nil
 $LOAD_PATH.unshift File.join(File.expand_path(__FILE__), "..", "..", "lib")
 require 'chingu'
 require 'texplay'
-include Gosu
 include Chingu
+include Gosu
 
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
+
+$game_bgm = nil
 
 $game_enemies = []
 $game_hazards = []
 $game_terrains = []
+$game_bridges = []
 $game_items = []
 $game_subweapons = []
 
@@ -18,12 +21,13 @@ $game_subweapons = []
 # Everything started here.
 # ------------------------------------------------------
 class Game < Chingu::Window
-	attr_accessor :level, :lives, :map
+	attr_accessor :level, :block, :lives, :hp, :maxhp, :ammo, :wp_level, :subweapon, :map, :transfer
 	
 	def initialize
-		# super(544,416)
-		# super(480,360)
-		super(400,300)
+		super(384,288)
+		#~ super(416,288)
+		#~ super(592,288)
+		#~ super(640,288)
 		
 		Sound["sfx/swing.wav"]
 		Sound["sfx/klang.wav"]
@@ -34,25 +38,52 @@ class Game < Chingu::Window
 		
 		# self.factor = 2
 		retrofy # THE classy command!
-		# push_game_state(Play)
+		setup_player
+		setup_stage
+		@transfer = true
+		transitional_game_state(Transitional, :speed => 32)
 		blocks = [
-			[Level00] #level 0
+			[Level00, Level01, Level02], #level 0
+			[Level10]
 		]
-		@map = Map.new(:map =>blocks, :row => $window.level, :col => 0)
+		#~ $Game_BGM = Module_Game::BGM[@level]
+		#~ p $Game_BGM
+		@map = Map.new(:map =>blocks, :row => @level-1, :col => @block-1)
 		switch_game_state(@map.current)
+		#~ transitional_game_state(Transitional, :speed => 32)
 		# self.caption = "Le Trial"
 	end
 	
-	def reset_game
-		@level = 0
-		@lives = 3
+	def setup_stage
+		@level = 1
+		@block = 1
 	end
 	
-	# def update
-	# end
+	def transferring
+		@transfer = true
+	end
 	
-	# def draw
-	# end
+	def stop_transferring
+		@transfer = false
+	end
+	
+	def setup_player
+		@hp = @maxhp = 16
+		#~ @lives = 3 unless @lives > 0
+		@ammo = 05
+		@wp_level = 1
+		@subweapon = :none
+	end
+	
+	def clear_cache
+		#~ $game_bgm = nil
+		$game_enemies = []
+		$game_hazards = []
+		$game_terrains = []
+		$game_bridges = []
+		$game_items = []
+		$game_subweapons = []
+	end
 end
 
 # This is is important.

@@ -3,8 +3,8 @@
 # Animated
 # ------------------------------------------------------
 class Player < Chingu::GameObject
-	attr_reader 	:direction, :invincible, :maxhp, :status, :action, :last_x # , :running, :sword
-	attr_accessor	:hp, :ammo, :wp_level, :subweapon
+	attr_reader 	:direction, :invincible, :last_x # , :running, :sword
+	attr_accessor	:y_flag, :sword, :status, :action, :running, :animations
 	trait :bounding_box, :scale => [0.4, 0.8], :debug => false
 	traits :timer, :collision_detection, :velocity
 		
@@ -21,39 +21,51 @@ class Player < Chingu::GameObject
 			:x => :fire
 		}
 		@animations = Chingu::Animation.new( :file => "player/mark.png", :size => [32,32])
-		# @animations = Chingu::Animation.new( :file => "player/mark-small.png", :size => [24,24])
 		@animations.frame_names = {
-			:stand => 0..1,
-			:step => 2..2,
-			:walk => 3..10,
-			:jump => 11..13,
-			:hurt => 14..16,
-			:die => 16..16,
-			:crouch => 17..18,
-			:stead => 19..19,
-			:shoot => 20..22,
-			:crouch_shoot => 23..26,
-			:raise => 27..29
+			:stand => 0..2,
+			:step => 3..3,
+			:walk => 4..11,
+			:jump => 12..14,
+			:hurt => 15..17,
+			:die => 17..17,
+			:crouch => 18..19,
+			:stead => 20..20,
+			:shoot => 21..23,
+			:crouch_shoot => 24..27,
+			:raise => 28..30
 		}
+		@animations[:stand].delay = 50
+		@animations[:stand].bounce = true
 		@animations[:walk].delay = 65
 		@image = @animations[:stand].first
-		@speed = 2 # 2
-		@hp = @maxhp = 16
-		@ammo = 05
-		@wp_level = 1
+		@speed = 2 
 		@status = :stand
 		@action = :stand
 		@invincible = false
 		@jumping = false
+		@vert_jump = false
 		@running = false
 		@subattack = false
-		@subweapon = :none
+		#~ @subweapon = :none
 		
 		self.zorder = 250
 		# @acceleration_y = 0.5
-		@acceleration_y = Environment::GRAV_ACC # 0.3
-		@max_velocity = Environment::GRAV_CAP # 6 # 8
+		@acceleration_y =Module_Game::Environment::GRAV_ACC # 0.3
+		@max_velocity = Module_Game::Environment::GRAV_CAP # 6 # 8
 		self.rotation_center = :bottom_center
+		
+		every(2000){
+			unless die?
+				if @action == :stand && @status == :stand && @last_x == @x
+					p "idle"
+					during(150){
+						@image = @animations[:stand].next
+					}.then{@image = @animations[:stand].reset; @image = @animations[:stand].first}
+					#~ @image = @animations[:stand].last
+					#~ after(100){@image = @animations[:stand].first}
+				end
+			end
+		}
 		
 		@last_x, @last_y = @x, @y
 		@y_flag = @y
@@ -61,8 +73,18 @@ class Player < Chingu::GameObject
 		cache_bounding_box
 	end
 	
+	def reset_state
+		@status = :stand; @action = :stand
+		@sword = nil
+		@invincible = false
+		@jumping = false
+		@vert_jump = false
+		@running = false
+		@subattack = false
+	end
+	
 	def stand
-		unless @status == :jump or @status == :hurt or die? or @y != @y_flag or @action != :stand
+		unless @status == :jump or disabled or die? or @y != @y_flag or @action != :stand
 			@image = @animations[:stand].first
 			@status = :stand
 			@running = false
@@ -70,55 +92,27 @@ class Player < Chingu::GameObject
 		end
 	end
 	
-	def move_left
-		return if (@action == :attack && @status == :stand && @velocity_y < Environment::GRAV_WHEN_LAND + 1 ) || @status == :crouch || die? || @status == :stead || @action == :raise || (@status == :hurt and moved?) || @action == :raise 
-		move(-@speed, 0) unless (@status == :hurt and moved?) or @action == :raise
-	end
-	
-	def move_right
-		return if (@action == :attack && @status == :stand && @velocity_y < Environment::GRAV_WHEN_LAND + 1 ) || @status == :crouch || die? || @status == :stead || @action == :raise || (@status == :hurt and moved?) || @action == :raise
-		move(@speed, 0) unless (@status == :hurt and moved?) or @action == :raise # @x += 1
-	end
-	
-	def jump
-		return if self.velocity_y > Environment::GRAV_WHEN_LAND # 1
-		return if @status == :crouch or @status == :jump or @status == :hurt or die? or @action != :stand 
-		@status = :jump
-		@jumping = true
-		# @velocity_x = -@speed if holding?(:left)
-		# @velocity_x = @speed if holding?(:right)
-		@velocity_y = -4
-		during(250){
-			if holding?(:z) && @jumping
-				@velocity_y = -4 unless @velocity_y <=  -Environment::GRAV_CAP
-			else
-				@jumping = false
-			end
-		}
-	end
-	
 	def crouch
-		unless @status == :jump or disabled or @action == :attack
+		unless @status == :jump or disabled or @action == :attack or die?
 			@image = @animations[:crouch].first
 			@status = :crouch
-		end
-		if @action == :attack # && (@y - @y_flag > 20 && @status == :jump)
-			@image = @animations[:crouch_shoot].last
 		end
 	end
 	
 	def steady
-		unless @status == :jump or disabled or @action == :attack
+		unless @status == :jump or disabled or @action == :attack or die?
 			@image = @animations[:stead].first
 			@status = :stead
 		end
 	end
 	
 	def land
-		@jumping = false
-		if (@y - @y_flag > 40 or (@y - @y_flag > 20 && @status == :jump) ) && @status != :die
+		delay = 300
+		delay = 400 if @action == :attack
+		if (@y - @y_flag > 48 or (@y - @y_flag > 32 && @status == :jump ) ) && @status != :die
+		#~ if (@y - @y_flag > 40) && @status != :die
 			Sound["sfx/step.wav"].play
-			between(1,300) { 
+			between(1,delay) { 
 				@status = :crouch; crouch
 			}.then { 
 				if !die?; @status = :stand; @image = @animations[:stand].first; end
@@ -128,114 +122,48 @@ class Player < Chingu::GameObject
 			if @status == :jump
 				@image = @animations[:stand].first unless Sword.size >= 1
 				@status = :stand 
-			elsif @velocity_y >= Environment::GRAV_WHEN_LAND + 1 # 2
+			elsif @velocity_y >= Module_Game::Environment::GRAV_WHEN_LAND + 1 # 2
 				@image = @animations[:stand].first unless Sword.size >= 1
-				@velocity_y = Environment::GRAV_WHEN_LAND # 1
+				@velocity_y = Module_Game::Environment::GRAV_WHEN_LAND # 1
 			end
 		end
+		@jumping = false if @jumping
+		@vert_jump = false if !@jumping
 		@velocity_x = 0
+		@y_flag = @y
 	end
 	
-	def knockback(damage)
-		@status = :hurt
-		@invincible = true
-		@sword.destroy if @sword != nil
-		Sound["sfx/grunt.ogg"].play(0.8)
-		@hp -= damage # 3
-		@hp = 0 if @hp <= 0
-		# self.velocity_x = (self.factor_x*-@speed)
-		self.velocity_x = (self.factor_x*-1)
-		# self.velocity_y = -5
-		self.velocity_y = -3
-		land?
+	def move_left
+		return if (@action == :attack && @status == :stand && @velocity_y < Module_Game::Environment::GRAV_WHEN_LAND + 1 ) || @status == :crouch || die? || @status == :stead || disabled || (@status == :hurt and moved?) || @action == :raise || @status == :blink
+		move(-@speed, 0) # unless (@status == :hurt and moved?) or @action == :raise
 	end
 	
-	def hurt
-		self.velocity_x = 0
-		if !die?
-			between(1,500) { 
-				@status = :crouch; crouch
-			}.then { @status = :stand; @image = @animations[:stand].first}
-			between(500,2000){@color.alpha = 128}.then{@invincible = false; @color.alpha = 255}
-		else
-			between(1,120) { 
-				crouch
-			}.then { 
-				@status = :die; @image = @animations[:die].first
-				game_state.after(1000) { $window.switch_game_state($window.map.current) }
-			}
-		end
+	def move_right
+		return if (@action == :attack && @status == :stand && @velocity_y < Module_Game::Environment::GRAV_WHEN_LAND + 1 ) || @status == :crouch || die? || @status == :stead || disabled || (@status == :hurt and moved?) || @action == :raise || @status == :blink
+		move(@speed, 0) # unless (@status == :hurt and moved?) or @action == :raise # @x += 1
 	end
 	
-	def land?
-		self.each_collision($game_terrains) do |me, stone_wall|
-			if self.velocity_y < 0  # Hitting the ceiling
-				me.y = stone_wall.bb.bottom + me.image.height * me.factor_y
-				me.velocity_y = 0
-			else  # Land on ground
-				if @status == :hurt
-					hurt
-				else
-					land
-				end
-				me.velocity_y = Environment::GRAV_WHEN_LAND # 1
-				me.y = stone_wall.bb.top - 1 # unless me.y > stone_wall.y
+	def jump
+		return if self.velocity_y > Module_Game::Environment::GRAV_WHEN_LAND # 1
+		return if @status == :crouch or @status == :jump or @status == :hurt or die? or @action != :stand 
+		@status = :jump
+		@jumping = true
+		jump_add = 0
+		# @velocity_x = -@speed if holding?(:left)
+		# @velocity_x = @speed if holding?(:right)
+		#~ @velocity_y = -7
+		@velocity_y = -4
+		during(200){
+			@vert_jump = true if !holding_any?(:left, :right)
+			if holding?(:z) && @jumping && !disabled
+				@velocity_y = -4  unless @velocity_y <=  -Module_Game::Environment::GRAV_CAP || !@jumping
+			else
+				@velocity_y = -1 unless !@jumping
 			end
-		end
-	end
-	
-	def die?
-		return false if @hp > 0
-		return true if @hp <= 0
-	end
-	
-	def disabled
-		@status == :hurt or @status == :die
-	end
-	
-	def weapon_up
-		raise
-	end
-	
-	def move(x,y)
-		# @image = @animations[:walk].next  if x != 0 && @status != :jump # && !holding_any?(:x)
-		if x != 0 && @status != :jump
-			@image = @animations[:step].first if !@running
-			@image = @animations[:walk].next if @running
-			# after(50) { @running = true if !@running and x != 0; @running = true if x == 0 }
-			after(50) { @running = true if !@running }
-		end
-		
-		@image = @animations[:hurt].first  if @status == :hurt
-		@image = @animations[:raise].first  if @action == :raise
-		
-		unless @action == :attack || @status == :hurt
-			self.factor_x = self.factor_x.abs   if x > 0
-			self.factor_x = -self.factor_x.abs  if x < 0
-		end
-		
-		@x += x unless @action == :raise
-		self.each_collision($game_terrains) do |me, stone_wall|
-			@x = previous_x 
-			break
-		end
-			
-		@y += y
-		# after(2000) {@running = true if !@running }
-		# @running = true if !@running
-	end
-	
-	def check_last_direction
-		if @x == @last_x && @y == @last_y or @subattack
-			@direction = [self.factor_x*(2), 0]
-		else
-			@direction = [@x - @last_x, @y - @last_y]
-		end
-		@last_x, @last_y = @x, @y
+		}
 	end
 	
 	def raise
-		# unless @wp_level >= 3
 		@action = :raise
 		dir = [self.velocity_x, self.velocity_y]
 		@image = @animations[:shoot].last
@@ -247,18 +175,163 @@ class Player < Chingu::GameObject
 		after(500) {@sword.die; @image = @animations[:stand].first; @image = @animations[:jump].last if @status == :jump; @action = :stand; self.velocity_x, self.velocity_y = dir[0], dir[1]; @acceleration_y = 0.3}
 	end
 	
+	def at_edge?
+		@x < (bb.width/2)  || @x > parent.area[0]-(bb.width/2) 
+	end
+	
+	def disabled
+		@status == :hurt or @status == :die
+	end
+	
+	def weapon_up
+		raise
+	end
+	
+	def die?
+		return false if $window.hp > 0
+		return true if $window.hp <= 0
+		#~ if $window.hp <= 0 or parent.outside_game_area(self)
+			#~ $game_bgm.stop
+			#~ return true 
+		#~ end
+	end
+	
+	def land?
+		self.each_collision($game_terrains) do |me, stone_wall|
+			if self.velocity_y < 0  # Hitting the ceiling
+				me.y = stone_wall.bb.bottom + me.image.height * me.factor_y
+				me.velocity_y = 0
+				@jumping = false
+			else  # Land on ground
+				if @status == :hurt
+					hurt
+				else
+					land
+				end
+				me.velocity_y = Module_Game::Environment::GRAV_WHEN_LAND # 1
+				me.y = stone_wall.bb.top - 1 # unless me.y > stone_wall.y
+			end
+		end
+		self.each_collision($game_bridges) do |me, bridge|
+			if me.y < bridge.y && me.velocity_y >= 0
+				if @status == :hurt
+					hurt
+				else
+					land
+				end
+				me.velocity_y = Module_Game::Environment::GRAV_WHEN_LAND # 1
+				me.y = bridge.bb.top - 1
+			end
+		end
+	end
+
+	def knockback(damage)
+		@status = :hurt
+		@action = :stand
+		@invincible = true
+		@sword.destroy if @sword != nil
+		Sound["sfx/grunt.ogg"].play(0.8)
+		$window.hp -= damage # 3
+		$window.hp = 0 if $window.hp <= 0
+		self.velocity_x = (self.factor_x*-1)
+		self.velocity_y = -3
+		land?
+	end
+	
+	def hurt
+		@velocity_x = 0
+		@jumping = false
+		if !die?
+			between(1,500) { 
+				@status = :crouch; crouch
+			}.then { @status = :stand; @image = @animations[:stand].first}
+			between(500,2000){@color.alpha = 128}.then{@invincible = false; @color.alpha = 255}
+		else
+			dead
+		end
+	end
+
+	def dead
+		$window.hp = 0
+		$game_bgm.stop
+		@sword.die if @sword != nil
+		#~ between(1,120) { 
+			#~ crouch
+		@status = :die
+		@image = @animations[:stand].last
+		after(100){@image = @animations[16]}
+		#~ }.then {
+		after(200){
+			@image = @animations[:die].first
+			@x += 8*@factor_x unless @y > $window.height + parent.viewport.y
+			game_state.after(1000) { 
+				$window.transferring
+				#~ $window.setup_player
+				@sword.die if @sword != nil
+				$window.switch_game_state($window.map.first_block)
+				$window.setup_player
+				reset_state
+				#~ $window.push_game_state(Zero)
+			}
+		}
+		$window.block = 1
+		#~ $window.setup_player
+		#~ reset_stats
+	end
+	
+	def move(x,y)
+		return if @status == :blink
+		# @image = @animations[:walk].next  if x != 0 && @status != :jump # && !holding_any?(:x)
+		if x != 0 && @status != :jump
+			@image = @animations[:step].first if !@running
+			@image = @animations[:walk].next if @running
+			after(50) { @running = true if !@running }
+		end
+		
+		@image = @animations[:hurt].first  if @status == :hurt
+		@image = @animations[:raise].first  if @action == :raise
+		
+		unless @action == :attack || @status == :hurt
+			self.factor_x = self.factor_x.abs   if x > 0
+			self.factor_x = -self.factor_x.abs  if x < 0
+		end
+		
+		unless @action == :raise
+			@x += x if !@vert_jump
+			@x += x/2 if @vert_jump
+		end
+		
+		self.each_collision($game_terrains) do |me, stone_wall|
+			@x = previous_x 
+			break
+		end
+		@x = previous_x  if at_edge?
+			
+		@y += y
+	end
+	
+	def check_last_direction
+		if @x == @last_x && @y == @last_y or @subattack
+			@direction = [self.factor_x*(2), 0]
+		else
+			@direction = [@x - @last_x, @y - @last_y]
+		end
+		@last_x, @last_y = @x, @y
+	end
+	
 	def fire
 		unless disabled or @action == :raise
-			if holding?(:up) and @subweapon != :none
-				unless @action == :attack || @status == :crouch || @ammo == 0 || Knife.size >= 1 || Axe.size >= 1 || Rang.size >= 1 
+			if holding?(:up) and $window.subweapon != :none
+				unless @action == :attack || @status == :crouch || $window.ammo == 0 || Knife.size >= 1 || Axe.size >= 1 || Rang.size >= 1 
 					@action = :attack
 					@subattack = true					
 					between(1,50){@image = @animations[:shoot].first}
 					.then	{@image = @animations[:shoot].next}
 					after(150) { @image = @animations[:shoot].next
 							factor_x = (self.factor_x^0)
-							@ammo -= 1
-							case @subweapon
+							#~ @ammo -= 1
+							$window.ammo -= 1
+							case $window.subweapon
 								when :knife
 									Knife.create(:x => @x+(10*factor_x), :y => @y-(self.height/2), :velocity => @direction, :factor_x => factor_x) unless Knife.size >= 1
 								when :axe
@@ -294,6 +367,7 @@ class Player < Chingu::GameObject
 							# @sword.y = (@y-12)
 							@sword.y = (@y-(self.height/2)-3)
 							@sword.y = (@y-(self.height/2)+2) if @status == :crouch or @status == :jump
+							@sword.y = (@y-(self.height/2)+2) if @status == :jump
 							@sword.angle = 120*factor
 							@sword.velocity = @direction
 						end
@@ -310,8 +384,11 @@ class Player < Chingu::GameObject
 						end
 					}.then {
 						unless disabled or @action == :raise
-							@image = @animations[:shoot].next
-							@image = @animations[:crouch_shoot].next if @status == :crouch 
+							if @status == :crouch 
+								@image = @animations[:crouch_shoot].next
+							else
+								@image = @animations[:shoot].next
+							end
 						end
 						@sword.collidable = true
 						#~ @sword.bb.width = (@sword.bb.width*4/5)
@@ -330,8 +407,11 @@ class Player < Chingu::GameObject
 						end
 					}.then {
 						unless disabled or @action == :raise
-							@image = @animations[:shoot].last
-							@image = @animations[:crouch_shoot].last if @status == :crouch 
+							if @status == :crouch 
+								@image = @animations[:crouch_shoot].last
+							else
+								@image = @animations[:shoot].last
+							end
 						end
 						#~ @sword.bb.width = @sword.bb.width*14/12
 						@sword.bb.height = ((@sword.bb.width*1/10))
@@ -348,17 +428,17 @@ class Player < Chingu::GameObject
 							@image = @animations[:crouch_shoot].last if @status == :crouch
 						end
 					}.then {
-						unless @action == :raise
+						unless disabled or @action == :raise
 							@sword.die
 							@action = :stand
-							@status = :stand if @status == :stead
 							unless disabled
 								@image = @animations[:stand].first if @status == :stand or @status == :stead
 								@image = @animations[:crouch].first if @status == :crouch
 								@image = @animations[:jump].last if @status == :jump
 							end
 							@animations[:shoot].reset
-							@animations[:crouch_shoot].reset
+							@status = :stand if @status == :stead || !holding?(:down)
+							#~ @animations[:crouch_shoot].reset
 						end
 					}
 				end
@@ -374,21 +454,25 @@ class Player < Chingu::GameObject
 		end
 		if @status == :jump and @action == :stand
 			if @last_y > @y 
-				@image = @animations[:jump].first 
+				@image = @animations[:jump].first
+				@image = @animations[13] if @vert_jump
 			else
-				@image = @animations[12] if @velocity_y <= 2
+				@image = @animations[13] if @velocity_y <= 2
 				@image = @animations[:jump].last if @velocity_y > 2
 			end
 		end
 		check_last_direction
-		if @velocity_y > Environment::GRAV_WHEN_LAND + 1 && @status != :jump && @action == :stand
-			@image = @animations[12] if @velocity_y <= 3
+		if @velocity_y > Module_Game::Environment::GRAV_WHEN_LAND + 1 && @status != :jump && @action == :stand
+			@image = @animations[13] if @velocity_y <= 3
 			@image = @animations[:jump].last if @velocity_y > 3
 		end
 		self.each_collision(Rang) do |me, weapon|
 			weapon.die
 		end
-		@y_flag = @y if @velocity_y == Environment::GRAV_WHEN_LAND # 1
-		@wp_level = 3 if @wp_level > 3
+		@y_flag = @y if @velocity_y == Module_Game::Environment::GRAV_WHEN_LAND && !@jumping # 1
+	end
+	
+	def to_s
+		puts "#{@running} #{@jumping} #{@vert_jump} #{@subattack} #{@invincible} #{@sword}"
 	end
 end

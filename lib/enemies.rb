@@ -10,17 +10,20 @@ class Enemy < GameObject
 		@player = parent.player
 		@invincible = false
 		@harmful = true
+		@hp = 0
+		@damage = 0
 		self.zorder = 200
 		@gap_x = @x - @player.x
 		@gap_y = @y - @player.y
 		@last_x, @last_y = @x, @y
-		$game_enemies << self
+		#~ $game_enemies << self
 	end
 	
 	def hit(weapon)
 		unless die?
 			# Spark.create(:x => self.x+((self.bb.width*3/5)*-@player.factor_x), :y => self.y-(self.height*1/5), :angle => 30*@player.factor_x)
 			Spark.create(:x => self.x, :y => self.y-@player.height*1/4, :angle => 30*@player.factor_x)
+			#~ Spark.create(:x => self.x - weapon.x + weapon.width, :y =>  self.y - weapon.y + weapon.height, :angle => 30*@player.factor_x)
 			Sound["sfx/hit.wav"].play(0.5)
 			@hp -= weapon.damage
 			die
@@ -29,6 +32,7 @@ class Enemy < GameObject
 	
 	def die
 		destroy
+		$game_enemies.delete(self) rescue nil
 	end
 	
 	def die?
@@ -45,33 +49,53 @@ class Enemy < GameObject
 	
 	def land?
 		self.each_collision($game_terrains) do |me, stone_wall|
-			if self.velocity_y < 0  # Hitting the ceiling
-				me.y = stone_wall.bb.bottom + me.image.height * me.factor_y
-				me.velocity_y = 0
-			else  
-				me.velocity_y = Environment::GRAV_WHEN_LAND
-				me.y = stone_wall.bb.top - 1 unless me.y > stone_wall.y
+			if collision_at?(me.x, me.y)
+				if self.velocity_y < 0  # Hitting the ceiling
+					me.y = stone_wall.bb.bottom + me.image.height * me.factor_y
+					me.velocity_y = 0
+				else  
+					me.velocity_y = Module_Game::Environment::GRAV_WHEN_LAND
+					me.y = stone_wall.bb.top - 1 unless me.y > stone_wall.y
+				end
+			end
+		end
+		self.each_collision($game_bridges) do |me, bridge|
+			if collision_at?(me.x, me.y)
+				if self.velocity_y > 0
+					me.velocity_y = Module_Game::Environment::GRAV_WHEN_LAND
+					me.y = bridge.bb.top - 1 unless me.y > bridge.y
+				end
 			end
 		end
 	end
 	
 	def check_collision
+		#~ self.each_collision(Sword, Axe, Rang, Knife) do |enemy, weapon|
+			#~ unless enemy.invincible
+				#~ enemy.hit(weapon)
+				#~ weapon.die if weapon.is_a?(Knife)
+			#~ end
+		#~ end
 		self.each_collision(Sword, Axe, Rang, Knife) do |enemy, weapon|
-			unless enemy.invincible
-				enemy.hit(weapon)
-				weapon.die if weapon.is_a?(Knife)
+			if collision_at?(enemy.x, enemy.y)
+				unless enemy.invincible
+					enemy.hit(weapon)
+					#~ Spark.create(:x => enemy.x - weapon.x + weapon.width, :y =>  enemy.y - weapon.y + weapon.height, :angle => 30*@player.factor_x)
+					weapon.die if weapon.is_a?(Knife)
+				end
 			end
 		end
 		self.each_collision(@player) do |enemy, me|
-			me.knockback(@damage) unless me.invincible or enemy.die? or !enemy.harmful? # or (enemy.is_a? Enemy and enemy.hp <= 0)
+			#~ if collision_at?(me.x, me.y)
+			if collision_at?(enemy.x, enemy.y)
+				me.knockback(@damage) unless me.invincible or enemy.die?
+			end
 		end
 	end
 	
-	# def update
-		# self.each_collision(@player) do |enemy, me|
-			# me.knockback unless me.invincible or enemy.die? # or (enemy.is_a? Enemy and enemy.hp <= 0)
-		# end
-	# end
+	def update
+		check_collision
+	end
 end
 
 class Ball < Enemy
@@ -86,31 +110,57 @@ class Ball < Enemy
 	end
 	
 	def die
-		if @hp <= 0
-			during(150){ 
-				self.collidable = false; @factor_x += 0.1; @factor_y += 0.1; @color.alpha -= 10 
-			}.then {
-				destroy
-				i = rand(1)
-				case i
-					when 0
-					# Ammo.create(:x => self.x, :y => self.y)
-					# when 1
-					#~ Item_Knife.create(:x => self.x, :y => self.y)
-					# when 2
-					# Item_Axe.create(:x => self.x, :y => self.y)
-					# when 3
-					# Item_Rang.create(:x => self.x, :y => self.y)
-					# when 4
-					Item_Sword.create(:x => self.x, :y => self.y)
-				end
-			} 
-		else
-			@invincible = true
-			dir = self.velocity_x
-			self.velocity_x *= 0
-			after(400) { @invincible = false; self.velocity_x = dir}
-		end
+		#~ if @hp <= 0
+		during(150){ 
+			self.collidable = false; @factor_x += 0.1; @factor_y += 0.1; @color.alpha -= 10 
+		}.then {
+			destroy
+			i = rand(1)
+			case i
+				when 0
+				Ammo.create(:x => self.x, :y => self.y)
+				# when 1
+				#~ Item_Knife.create(:x => self.x, :y => self.y)
+				# when 2
+				# Item_Axe.create(:x => self.x, :y => self.y)
+				# when 3
+				# Item_Rang.create(:x => self.x, :y => self.y)
+				# when 4
+				#~ Item_Sword.create(:x => self.x, :y => self.y)
+			end
+		} 
+		#~ else
+			#~ @invincible = true
+			#~ dir = self.velocity_x
+			#~ self.velocity_x *= 0
+			#~ after(400) { @invincible = false; self.velocity_x = dir}
+		#~ end
+	end
+	
+	def update
+		check_collision
+	end
+end
+
+class Ball_Knife < Ball
+	trait :bounding_box, :debug => false
+	def setup
+		super
+		@image = Image["enemies/ball.png"]
+		@hp = 1
+		@harmful = true
+		@damage = 6
+		@color = Color.new(0xff00bbff)
+		cache_bounding_box
+	end
+	
+	def die
+		during(150){ 
+			self.collidable = false; @factor_x += 0.1; @factor_y += 0.1; @color.alpha -= 10 
+		}.then {
+			destroy
+			Item_Knife.create(:x => self.x, :y => self.y)
+		}
 	end
 	
 	def update
@@ -219,11 +269,66 @@ end
 # ------------------------------------------------------
 # Ghouls
 # ------------------------------------------------------
-class Ghoul < Enemy
-	trait :bounding_box, :scale => [0.2, 0.7], :debug => false
+class Zombie < Enemy
+	trait :bounding_box, :scale => [0.5, 0.7], :debug => false
 	def setup
 		super
 		@animations = Chingu::Animation.new(:file => "enemies/ghouls.png", :size => [32,32])
+		@animations.frame_names = {
+			:walk => 0..3,
+			:attack => 4..5
+		}
+		@animations[:walk].delay = 150
+		@animations[:walk].bounce = true
+		@speed = 0.25
+		@hp = 2
+		@damage = 3
+		@action = :idle
+		@acceleration_y = Module_Game::Environment::GRAV_ACC
+		@max_velocity = Module_Game::Environment::GRAV_CAP # 8
+		@velocity_y = 2
+		self.rotation_center = :bottom_center
+		@image = @animations[:walk].first
+		@factor_x = -@gap_x/(@gap_x.abs).abs
+		cache_bounding_box
+	end
+	
+	def update
+		super
+		land?
+		destroy if self.parent.viewport.outside_game_area?(self)
+		unless self.velocity_y > Module_Game::Environment::GRAV_WHEN_LAND or @invincible
+			@image = @animations[:walk].next
+			@x += @speed*@factor_x
+		end
+		@image = @animations[:walk].first if @velocity_y > Module_Game::Environment::GRAV_WHEN_LAND
+	end
+	
+	def die
+		# pause!
+		if @hp <= 0
+			i = rand(2)
+			case i
+				when 1
+				Ammo.create(:x => self.x, :y => self.y)
+			end
+			@x += 0
+			@y += 0
+			@color.alpha = 128
+			after(300){destroy}
+		else
+			@invincible = true
+			after(400) { @invincible = false; } # unpause! }
+		end
+	end
+end
+
+class Ghoul < Enemy
+	trait :bounding_box, :scale => [1, 0.7], :debug => false
+	def setup
+		super
+		@animations = Chingu::Animation.new(:file => "enemies/ghouls.png", :size => [32,32])
+		@color = Color.new(0xff88DD44)
 		@sword = Ghoul_Sword.create(:x => @x+(3*-@factor), :y => (@y-6), :velocity => @direction, :factor_x => -@factor, :zorder => self.zorder + 1)
 		@animations.frame_names = {
 			:walk => 0..3,
@@ -235,8 +340,8 @@ class Ghoul < Enemy
 		@hp = 6
 		@damage = 3
 		@action = :idle
-		@acceleration_y = Environment::GRAV_ACC
-		@max_velocity = Environment::GRAV_CAP # 8
+		@acceleration_y = Module_Game::Environment::GRAV_ACC
+		@max_velocity = Module_Game::Environment::GRAV_CAP # 8
 		@velocity_y = 2
 		self.rotation_center = :bottom_center
 		@image = @animations[:walk].first
@@ -251,6 +356,7 @@ class Ghoul < Enemy
 			unless die?
 				@image = @animations[:attack].first
 				@sword.x, @sword.y = @x+(3*@sword.factor_x), @y-11
+				@sword.factor_x = @factor_x
 			end
 		}.then{
 			unless die?
@@ -288,15 +394,15 @@ class Ghoul < Enemy
 		
 		unless die? or @action == :attack
 			@sword.x = @x+(3*@sword.factor_x)
-			@sword.y = @y-6 if @velocity_y > Environment::GRAV_WHEN_LAND
+			@sword.y = @y-6 if @velocity_y > Module_Game::Environment::GRAV_WHEN_LAND
 			@sword.factor_x = @factor_x
 			# @sword.bb.x = @sword.x
 			# @sword.bb.x += @sword.width if @factor_x == -1
 		end
-		@animations.on_frame(0){@sword.y = @y-6 unless die? }
-		@animations.on_frame(1){@sword.y = @y-7 unless die? }
-		@animations.on_frame(2){@sword.y = @y-7 unless die? }
-		@animations.on_frame(3){@sword.y = @y-6 unless die? }
+		#~ @animations.on_frame(0){@sword.y = @y-6 unless die? }
+		#~ @animations.on_frame(1){@sword.y = @y-7 unless die? }
+		#~ @animations.on_frame(2){@sword.y = @y-7 unless die? }
+		#~ @animations.on_frame(3){@sword.y = @y-6 unless die? }
 		
 		if @action != :attack
 			if (@x - @last_x).abs > 1
@@ -307,14 +413,14 @@ class Ghoul < Enemy
 				end
 				after(400){
 					@last_x = @x
-					@image = @animations[:walk].first if @velocity_y > Environment::GRAV_WHEN_LAND
+					@image = @animations[:walk].first if @velocity_y > Module_Game::Environment::GRAV_WHEN_LAND
 				}
 			else
-				unless self.velocity_y > Environment::GRAV_WHEN_LAND or @invincible or @gap_x.abs < 32
+				unless self.velocity_y > Module_Game::Environment::GRAV_WHEN_LAND or @invincible or @gap_x.abs < 32
 					@image = @animations[:walk].next
 					@x += @speed*@factor_x
 				end
-				@image = @animations[:walk].first if @velocity_y > Environment::GRAV_WHEN_LAND
+				@image = @animations[:walk].first if @velocity_y > Module_Game::Environment::GRAV_WHEN_LAND
 			end
 		end
 	end
@@ -426,7 +532,6 @@ class Musket < Enemy
 	end
 	
 	def die
-		pause! unless @hp <= 0
 		if @hp <= 0
 			@image = @animations[:die].first
 			@shooting = false
@@ -444,7 +549,104 @@ class Musket < Enemy
 			}
 		else
 			@invincible = true
-			after(400) { @invincible = false; self.unpause! }
+			after(400) { @invincible = false }
 		end
+	end
+end
+
+class Reaper < Enemy
+	#~ trait :bounding_box, :scale => [0.3, 0.75], :debug => true
+	trait :bounding_box,  :scale => [0.5, 0.75], :debug => false
+	def setup
+		super
+		@animations = Chingu::Animation.new(:file => "enemies/reaper.png", :size => [44,49])
+		@scite = Reaper_Scite.create(:x => @x+(18*@factor_x), :y => @y - 13, :velocity => @direction, :zorder => self.zorder + 1)
+		@animations.frame_names = {
+			:fly =>  0..2
+		}
+		@animations[:fly].delay = 250
+		@animations[:fly].bounce = true
+		@hp = 30
+		@damage = 3
+		@status = :idle
+		@direction = :upward
+		@image = @animations[:fly].first
+		self.rotation_center =  :center
+		self.factor_x = @gap_x/(@gap_x.abs).abs
+		@max_velocity = 2
+		float
+		cache_bounding_box
+		#~ every(500) {p @direction}
+	end
+	
+	def float
+		return if @hp <= 0
+		@status = :idle
+		if @status == :idle
+			self.velocity_x = 0
+			self.velocity_y = 0
+			#~ every(200) {
+				#~ @gap_x = @x - @player.x
+				#~ @gap_y = @y - @player.y
+			#~ }
+			after(1000) { @gap_x = @x - @player.x; @gap_y = @y - @player.y; fly }
+		end
+	end
+	
+	def fly
+		return if @hp <= 0
+		@status = :fly
+		self.velocity_x = rand(3) < 2 ? -2 : 2
+		self.velocity_y = rand(3) < 2 ? 2 : -2
+		@direction = :upward
+		during(1750) { 
+			#~ self.velocity_y += 0.1
+			#~ self.velocity_y = 2 if self.velocity_y > 2
+			if @x > $window.width + parent.viewport.x - 60
+				self.velocity_x -= 0.2
+			elsif @x < 60
+				self.velocity_x += 0.2
+			end
+			if @y > $window.height + parent.viewport.y - 60
+				@direction = :upward
+				self.velocity_y -= 0.2
+			elsif @y < $window.height / 2
+				@direction = :downward
+				self.velocity_y += 0.2
+			end
+			}.then {float}
+		# between(1, 750) {self.velocity_y -= 0.02*self.velocity_y}
+	end
+	
+	def die
+		if @hp <= 0
+		destroy
+		@scite.destroy
+		else
+			@invincible = true
+			after(400) { @invincible = false}
+		end
+	end
+	
+	def update
+		super
+		@image = @animations[:fly].next
+		@gap_x = @x - @player.x
+		@gap_y = @y - @player.y
+		if @gap_x < 0
+			@factor_x = -1 unless @status != :idle
+		else
+			@factor_x = 1 unless @status != :idle
+		end
+		@scite.x = @x+(18*@factor_x)
+		@scite.y = @y-13
+		@scite.factor_x = @factor_x
+		
+		#~ unless @x < 60 || @x > parent.viewport.x + $window.width - 60
+			#~ @velocity_x = -@velocity_x
+			#~ @x += @velocity_x*@factor_x
+		#~ end
+		
+		check_collision
 	end
 end

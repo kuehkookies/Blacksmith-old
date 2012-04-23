@@ -11,6 +11,19 @@ class Map
   def current
     @map[@row][@col] rescue nil
   end
+
+  def current_level
+	@row rescue nil
+  end
+  
+  def current_block
+	@col rescue nil
+  end
+
+  def first_block
+	@col = 0
+	@map[@row][@col] rescue nil
+  end
     
   def next_block
     @col += 1
@@ -22,13 +35,15 @@ class Map
     current
   end
 
-  def next_stage
-    @row -= 1
+  def next_level
+		@col = 0
+    @row += 1
     current
   end
 
-  def prev_stage
-    @row += 1
+  def prev_level
+		@col = 0
+    @row -= 1
     current
   end
 

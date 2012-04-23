@@ -8,17 +8,18 @@ class Sword < GameObject
 	attr_reader :damage
 	attr_accessor :zorder
 	
-	def setup
+	def initialize(options={})
+		super
 		@player = parent.player
-		@image = Image["weapons/sword-#{@player.wp_level}.png"]
+		@image = Image["weapons/sword-#{$window.wp_level}.png"]
 		self.rotation_center = :center_left
 		@zorder = @player.zorder
 		@velocity_x *= 1
 		@velocity_y *= -1 if self.velocity_y > 0
 		@velocity_y *= 1
 		@collidable = false
-		@damage = @player.wp_level*2
-		@damage = 4 if @player.wp_level >= 3
+		@damage = $window.wp_level*2
+		@damage = 4 if $window.wp_level >= 3
 		cache_bounding_box
 	end
 	
@@ -42,6 +43,7 @@ class Subweapons < GameObject
 	end
 	def die
 		destroy
+		$game_subweapons = []
 	end
 end
 
@@ -62,10 +64,10 @@ class Knife < Subweapons
 	
 	def deflect
 		Sound["sfx/klang.wav"].play(0.1)
-		@velocity_x *= -0.2
-		@velocity_y = -3
-		@rotation = 10*-@velocity_x
-		@acceleration_y = Environment::GRAV_ACC # 0.5
+		@velocity_x *= -0.1
+		@velocity_y = -4
+		@rotation = 25*@velocity_x
+		@acceleration_y = Module_Game::Environment::GRAV_ACC # 0.5
 		@collidable = false
 	end
 	
@@ -74,11 +76,6 @@ class Knife < Subweapons
 		self.each_collision($game_terrains) do |knife, wall|
 			knife.deflect
 		end
-		self.destroy_if {|knife| 
-			knife.x > self.viewport.x + $window.width + $window.width/8 or 
-			knife.x < self.viewport.x - + $window.width/8 or 
-			self.viewport.outside_game_area?(knife)
-		}
 	end
 	
 	def die
@@ -97,8 +94,8 @@ class Axe < Subweapons
 		@zorder = 300
 		@velocity_x *= 1
 		@velocity_y = -6
-		@max_velocity = Environment::GRAV_CAP
-		@acceleration_y = Environment::GRAV_ACC # 0.4
+		@max_velocity = Module_Game::Environment::GRAV_CAP
+		@acceleration_y = Module_Game::Environment::GRAV_ACC # 0.4
 		@rotation = 15*@velocity_x
 		@damage = 5
 		cache_bounding_box
@@ -106,7 +103,6 @@ class Axe < Subweapons
 	
 	def update
 		@angle += @rotation
-		self.destroy_if {|axe| axe.y > self.viewport.y + $window.height or axe.x < self.viewport.x or axe.x > self.viewport.x + $window.width}
 	end
 	
 	def deflect
@@ -141,6 +137,5 @@ class Rang < Subweapons
 		between(1,1500){@velocity_x -= 0.005*self.factor_x}
 		after(1500) {@turn_back = true}
 		@angle += @rotation
-		self.destroy_if {|rang| self.viewport.outside_game_area?(rang) and rang.turn_back }
 	end
 end

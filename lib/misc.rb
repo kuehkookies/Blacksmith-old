@@ -44,17 +44,21 @@ class Hazard < GameObject
 	
 	def setup
 		@player = parent.player
-		$game_hazards << self
-		
+		#~ $game_hazards << self
 	end
 	
 	def die
 		self.destroy
 	end
-	
+
 	def update
+		#~ self.each_collision(@player) do |enemy, me|
+			#~ me.knockback(@damage) unless me.invincible # or (enemy.is_a? Enemy and enemy.hp <= 0)
+		#~ end
 		self.each_collision(@player) do |enemy, me|
-			me.knockback(@damage) unless me.invincible # or (enemy.is_a? Enemy and enemy.hp <= 0)
+			if collision_at?(me.x, me.y)
+				me.knockback(@damage) unless me.invincible 
+			end
 		end
 	end
 end
@@ -68,14 +72,15 @@ class Ghoul_Sword < Hazard
 		self.rotation_center = :center_left
 		@velocity_x *= 1
 		@velocity_y *= 1
-		@max_velocity = Environment::GRAV_CAP
+		@max_velocity = Module_Game::Environment::GRAV_CAP
 		@damage = 4
 		@rotation = 0
+		@color = Color.new(0xff88DD44)
 		# cache_bounding_box
 	end
 	
 	def die
-		@acceleration_y = Environment::GRAV_ACC # 0.3
+		@acceleration_y = Module_Game::Environment::GRAV_ACC # 0.3
 		self.rotation_center = :center_center
 		@velocity_x = -@factor_x
 		@velocity_y = -6
@@ -85,13 +90,8 @@ class Ghoul_Sword < Hazard
 	end
 	
 	def update
-		self.each_collision(@player) do |enemy, me|
-			unless me.invincible
-				me.knockback(@damage) 
-				Sound["sfx/hit.wav"].play(0.5)
-			end
-		end
-		self.bb.x = @x
+		super
+		self.bb.x = @x unless self.bb.x == @x 
 		@angle += @rotation
 	end
 end
@@ -111,5 +111,17 @@ class Bullet_Musket < Hazard
 		# destroy if self.parent.viewport.outside_game_area?(self)
 		super
 		after(100){destroy}
+	end
+end
+
+class Reaper_Scite < Hazard
+	trait :bounding_circle, :debug => false
+	def setup
+	#~ def initialize
+		super
+		@image = Image["weapons/reaper-scite.png"]
+		@damage = 4
+		#~ @collidable = false
+		self.rotation_center = :center
 	end
 end
